@@ -17,3 +17,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "portable-pty-kotlin"
+
