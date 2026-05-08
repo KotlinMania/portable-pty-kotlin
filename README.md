@@ -67,7 +67,7 @@ spent working on it!
 
 ```kotlin
 dependencies {
-    implementation("io.github.kotlinmania:portable-pty-kotlin:0.1.0-SNAPSHOT")
+    implementation("io.github.kotlinmania:portable-pty-kotlin:0.1.0")
 }
 ```
 
