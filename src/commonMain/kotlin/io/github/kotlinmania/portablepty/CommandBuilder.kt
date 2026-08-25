@@ -1,4 +1,4 @@
-// port-lint: source tmp/portable-pty/src/cmdbuilder.rs
+// port-lint: source cmdbuilder.rs
 package io.github.kotlinmania.portablepty
 
 import kotlinx.serialization.Serializable
@@ -129,4 +129,8 @@ class CommandBuilder private constructor(
             controllingTty = true,
         )
     }
+}
+
+internal fun isCwdRelativePath(path: String): Boolean {
+    return path == "." || path.startsWith("./") || path == ".." || path.startsWith("../")
 }
