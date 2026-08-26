@@ -4,6 +4,7 @@ package io.github.kotlinmania.portablepty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class CommandBuilderTest {
@@ -36,5 +37,24 @@ class CommandBuilderTest {
         assertEquals(emptyList(), cmd.iterExtraEnv())
     }
 
-    // testEnvCaseInsensitiveOverride unported: Windows-specific environment variable case insensitivity is handled by Windows host subsystems.
+    @Test
+    fun testEnvCaseInsensitiveOverride() {
+        val cmd = CommandBuilder.new("dummy")
+        cmd.env("Cargo_Pkg_Authors", "Not Wez")
+        assertEquals("Not Wez", cmd.getEnv("cargo_pkg_authors"))
+
+        cmd.envRemove("cARGO_pKG_aUTHORS")
+        assertNull(cmd.getEnv("CARGO_PKG_AUTHORS"))
+    }
+
+    @Test
+    fun testArgvAndCmdline() {
+        val cmd = CommandBuilder.new("myprog")
+        cmd.arg("arg1").args(listOf("arg2", "hello world"))
+        assertEquals(listOf("myprog", "arg1", "arg2", "hello world"), cmd.getArgv())
+
+        val (exe, cmdline) = cmd.cmdline()
+        assertTrue(exe.isNotEmpty())
+        assertTrue(cmdline.isNotEmpty())
+    }
 }

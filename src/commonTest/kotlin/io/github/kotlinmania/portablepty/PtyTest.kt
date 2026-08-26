@@ -74,4 +74,37 @@ class PtyTest {
         assertTrue(cmd.isDefaultProg())
         assertEquals(emptyList(), cmd.getArgv())
     }
+
+    @Test
+    fun testNativePtySystem() {
+        val sys = nativePtySystem()
+        val pair = sys.openpty(PtySize(rows = 30, cols = 100))
+        assertEquals(30, pair.master.getSize().rows)
+        assertEquals(100, pair.master.getSize().cols)
+
+        val child = pair.slave.spawnCommand(CommandBuilder.new("sh"))
+        assertEquals(1000L, child.processId())
+        val status = child.wait()
+        assertTrue(status.success())
+    }
+
+    @Test
+    fun testSerialTty() {
+        val tty = SerialTty("/dev/ttyUSB0")
+        tty.setBaudRate(115200)
+        tty.setCharSize(CharSize.Bits8)
+        tty.setFlowControl(FlowControl.None)
+        tty.setParity(Parity.None)
+        tty.setStopBits(StopBits.One)
+
+        assertEquals("/dev/ttyUSB0", tty.getPort())
+        assertEquals(115200, tty.getBaudRate())
+        assertEquals(CharSize.Bits8, tty.getCharSize())
+        assertEquals(FlowControl.None, tty.getFlowControl())
+
+        val pair = tty.openpty(PtySize.DEFAULT)
+        val child = pair.slave.spawnCommand(CommandBuilder.newDefaultProg())
+        val status = child.wait()
+        assertTrue(status.success())
+    }
 }
