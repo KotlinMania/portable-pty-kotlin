@@ -4,14 +4,14 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 2/8 (25.0%)
-- **Function parity:** 25/119 matched (target 35) — 21.0%
-- **Class/type parity:** 10/34 matched (target 12) — 29.4%
-- **Combined symbol parity:** 35/153 matched (target 47) — 22.9%
-- **Average inline-code cosine:** 0.26 (function body across 2 matched files)
-- **Average documentation cosine:** 0.42 (doc text across 2 matched files)
+- **Files Present:** 3/8 (37.5%)
+- **Function parity:** 58/117 matched (target 89) — 49.6%
+- **Class/type parity:** 14/34 matched (target 21) — 41.2%
+- **Combined symbol parity:** 72/151 matched (target 110) — 47.7%
+- **Average inline-code cosine:** 0.41 (function body across 3 matched files)
+- **Average documentation cosine:** 0.48 (doc text across 3 matched files)
 - **Cheat-zeroed Files:** 0
-- **Critical Issues:** 2 files with <0.60 function similarity
+- **Critical Issues:** 3 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -27,28 +27,41 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. cmdbuilder
+### 1. serial
 
-- **Target:** `portablepty.CommandBuilder`
+- **Target:** `portablepty.Serial`
 - **Similarity:** 0.37
 - **Dependents:** 0
-- **Priority Score:** 163906.3
-- **Functions:** 21/37 matched (target 23)
-- **Missing functions:** `get_shell`, `get_base_env`, `reg_value_to_string`, `get_argv_mut`, `iter_extra_env_as_str`, `iter_full_env_as_str`, `umask`, `resolve_path`, `search_path`, `as_command`, `get_home_dir`, `current_directory`, `environment_block`, `cmdline`, `append_quoted`, `test_env_case_insensitive_override`
-- **Types:** 2/2 matched (target 3)
-- **Missing types:** _none_
-- **Tests:** 2/3 matched
+- **Priority Score:** 163306.3
+- **Functions:** 14/25 matched (target 22)
+- **Missing functions:** `new`, `fmt`, `as_raw_handle`, `write`, `flush`, `try_clone_reader`, `take_writer`, `process_group_leader`, `as_raw_fd`, `tty_name`, `read`
+- **Types:** 3/8 matched (target 7)
+- **Missing types:** `Handle`, `Slave`, `Master`, `MasterWriter`, `Reader`
+- **Lint issues:** 1
 
 ### 2. lib
 
 - **Target:** `portablepty.Pty`
-- **Similarity:** 0.15
+- **Similarity:** 0.30
 - **Dependents:** 0
-- **Priority Score:** 152708.5
-- **Functions:** 4/16 matched (target 12)
-- **Missing functions:** `default`, `get_termios`, `signal`, `from`, `fmt`, `try_wait`, `wait`, `process_id`, `as_raw_handle`, `kill`, `clone_killer`, `native_pty_system`
-- **Types:** 8/11 matched (target 9)
-- **Missing types:** `ProcessSignaller`, `RawDup`, `NativePtySystem`
+- **Priority Score:** 72707.0
+- **Functions:** 11/16 matched (target 30)
+- **Missing functions:** `default`, `get_termios`, `signal`, `from`, `fmt`
+- **Types:** 9/11 matched
+- **Missing types:** `RawDup`, `NativePtySystem`
+- **Lint issues:** 1
+
+### 3. cmdbuilder
+
+- **Target:** `portablepty.CommandBuilder`
+- **Similarity:** 0.55
+- **Dependents:** 0
+- **Priority Score:** 43904.5
+- **Functions:** 33/37 matched
+- **Missing functions:** `get_base_env`, `reg_value_to_string`, `resolve_path`, `as_command`
+- **Types:** 2/2 matched (target 3)
+- **Missing types:** _none_
+- **Tests:** 3/3 matched
 
 ## Success Criteria
 
