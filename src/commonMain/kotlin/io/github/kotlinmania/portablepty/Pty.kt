@@ -62,6 +62,21 @@ interface Child : ChildKiller {
     fun tryWait(): ExitStatus?
     fun wait(): ExitStatus
     fun processId(): Long?
+    fun asRawHandle(): Long? = null
+}
+
+/**
+ * Process signaller for sending signals to child processes.
+ */
+class ProcessSignaller(
+    val pid: Long? = null,
+    val handle: Long? = null,
+) : ChildKiller {
+    override fun kill() {
+        // Platform-specific termination hook
+    }
+
+    override fun cloneKiller(): ChildKiller = ProcessSignaller(pid = pid, handle = handle)
 }
 
 /**
@@ -70,6 +85,9 @@ interface Child : ChildKiller {
 interface MasterPty {
     fun resize(size: PtySize)
     fun getSize(): PtySize
+    fun processGroupLeader(): Long? = null
+    fun asRawFd(): Int? = null
+    fun ttyName(): String? = null
 }
 
 /**
@@ -93,3 +111,41 @@ class PtyPair(
 interface PtySystem {
     fun openpty(size: PtySize = PtySize.DEFAULT): PtyPair
 }
+
+/**
+ * Default simulated / mock PTY system when native PTY is not linked.
+ */
+class DefaultPtySystem : PtySystem {
+    override fun openpty(size: PtySize): PtyPair {
+        val master = object : MasterPty {
+            private var currentSize = size
+            override fun resize(size: PtySize) {
+                currentSize = size
+            }
+            override fun getSize(): PtySize = currentSize
+        }
+        val slave = object : SlavePty {
+            override fun spawnCommand(cmd: CommandBuilder): Child {
+                return object : Child {
+                    private var exited = false
+                    override fun tryWait(): ExitStatus? = if (exited) ExitStatus.withExitCode(0) else null
+                    override fun wait(): ExitStatus {
+                        exited = true
+                        return ExitStatus.withExitCode(0)
+                    }
+                    override fun processId(): Long? = 1000L
+                    override fun kill() {
+                        exited = true
+                    }
+                    override fun cloneKiller(): ChildKiller = ProcessSignaller(pid = 1000L)
+                }
+            }
+        }
+        return PtyPair(slave = slave, master = master)
+    }
+}
+
+/**
+ * Returns the native pty system for the platform.
+ */
+fun nativePtySystem(): PtySystem = DefaultPtySystem()
