@@ -77,25 +77,33 @@ class SerialTty(
     }
 
     fun getPort(): String = port
+
     fun getBaudRate(): Int = baud
+
     fun getCharSize(): CharSize = charSize
+
     fun getParity(): Parity = parity
+
     fun getStopBits(): StopBits = stopBits
+
     fun getFlowControl(): FlowControl = flowControl
 
     override fun openpty(size: PtySize): PtyPair {
-        val master = object : MasterPty {
-            override fun resize(size: PtySize) {}
-            override fun getSize(): PtySize = PtySize.DEFAULT
-        }
-        val slave = object : SlavePty {
-            override fun spawnCommand(cmd: CommandBuilder): Child {
-                if (!cmd.isDefaultProg()) {
-                    throw IllegalArgumentException("can only use default prog commands with serial tty implementations")
-                }
-                return SerialChild()
+        val master =
+            object : MasterPty {
+                override fun resize(size: PtySize) {}
+
+                override fun getSize(): PtySize = PtySize.DEFAULT
             }
-        }
+        val slave =
+            object : SlavePty {
+                override fun spawnCommand(cmd: CommandBuilder): Child {
+                    if (!cmd.isDefaultProg()) {
+                        throw IllegalArgumentException("can only use default prog commands with serial tty implementations")
+                    }
+                    return SerialChild()
+                }
+            }
         return PtyPair(slave = slave, master = master)
     }
 }
