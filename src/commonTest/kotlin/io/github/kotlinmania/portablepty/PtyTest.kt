@@ -1,4 +1,4 @@
-// port-lint: tests lib.rs
+// port-lint: tests portable-pty/src/lib.rs
 package io.github.kotlinmania.portablepty
 
 import kotlin.test.Test
