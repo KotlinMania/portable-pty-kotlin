@@ -68,11 +68,12 @@ class CommandBuilder private constructor(
     fun getUmask(): Int? = umaskValue
 
     fun env(key: String, value: String): CommandBuilder {
-        envs[EnvEntry.mapKey(key)] = EnvEntry(
-            isFromBaseEnv = false,
-            preferredKey = key,
-            value = value,
-        )
+        envs[EnvEntry.mapKey(key)] =
+            EnvEntry(
+                isFromBaseEnv = false,
+                preferredKey = key,
+                value = value,
+            )
         return this
     }
 
@@ -102,35 +103,31 @@ class CommandBuilder private constructor(
 
     fun iterExtraEnv(): List<Pair<String, String>> = iterExtraEnvAsStr()
 
-    fun iterExtraEnvAsStr(): List<Pair<String, String>> {
-        return envs.values
+    fun iterExtraEnvAsStr(): List<Pair<String, String>> =
+        envs.values
             .filter { !it.isFromBaseEnv }
             .map { it.preferredKey to it.value }
-    }
 
     fun iterFullEnv(): List<Pair<String, String>> = iterFullEnvAsStr()
 
-    fun iterFullEnvAsStr(): List<Pair<String, String>> {
-        return envs.values.map { it.preferredKey to it.value }
-    }
+    fun iterFullEnvAsStr(): List<Pair<String, String>> = envs.values.map { it.preferredKey to it.value }
 
     fun getShell(): String {
         val shell = getEnv("SHELL") ?: getEnv("ComSpec")
         return shell ?: "/bin/sh"
     }
 
-    fun getHomeDir(): String {
-        return getEnv("HOME") ?: getEnv("USERPROFILE") ?: "/"
-    }
+    fun getHomeDir(): String = getEnv("HOME") ?: getEnv("USERPROFILE") ?: "/"
 
     fun asUnixCommandLine(): String {
-        val quoted = args.map { arg ->
-            if (arg.isEmpty() || arg.any { it.isWhitespace() || it == '"' || it == '\'' || it == '\\' }) {
-                "\"" + arg.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-            } else {
-                arg
+        val quoted =
+            args.map { arg ->
+                if (arg.isEmpty() || arg.any { it.isWhitespace() || it == '"' || it == '\'' || it == '\\' }) {
+                    "\"" + arg.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+                } else {
+                    arg
+                }
             }
-        }
         return quoted.joinToString(" ")
     }
 
@@ -172,11 +169,12 @@ class CommandBuilder private constructor(
     }
 
     fun cmdline(): Pair<List<UShort>, List<UShort>> {
-        val exe = if (isDefaultProg()) {
-            getEnv("ComSpec") ?: "cmd.exe"
-        } else {
-            searchPath(args[0])
-        }
+        val exe =
+            if (isDefaultProg()) {
+                getEnv("ComSpec") ?: "cmd.exe"
+            } else {
+                searchPath(args[0])
+            }
 
         val cmdlineChars = mutableListOf<UShort>()
         appendQuoted(exe, cmdlineChars)
@@ -195,21 +193,23 @@ class CommandBuilder private constructor(
     companion object {
         fun new(program: String): CommandBuilder = CommandBuilder(program)
 
-        fun fromArgv(args: List<String>): CommandBuilder = CommandBuilder(
-            args = args.toMutableList(),
-            envs = mutableMapOf(),
-            cwd = null,
-            umaskValue = null,
-            controllingTty = true,
-        )
+        fun fromArgv(args: List<String>): CommandBuilder =
+            CommandBuilder(
+                args = args.toMutableList(),
+                envs = mutableMapOf(),
+                cwd = null,
+                umaskValue = null,
+                controllingTty = true,
+            )
 
-        fun newDefaultProg(): CommandBuilder = CommandBuilder(
-            args = mutableListOf(),
-            envs = mutableMapOf(),
-            cwd = null,
-            umaskValue = null,
-            controllingTty = true,
-        )
+        fun newDefaultProg(): CommandBuilder =
+            CommandBuilder(
+                args = mutableListOf(),
+                envs = mutableMapOf(),
+                cwd = null,
+                umaskValue = null,
+                controllingTty = true,
+            )
 
         fun appendQuoted(arg: String, cmdline: MutableList<UShort>) {
             if (arg.isNotEmpty() && !arg.any { it == ' ' || it == '\t' || it == '\n' || it == '"' || it == '\\' }) {
@@ -252,7 +252,10 @@ class CommandBuilder private constructor(
     }
 }
 
-internal fun isCwdRelativePath(path: String): Boolean {
-    return path == "." || path.startsWith("./") || path == ".." || path.startsWith("../") ||
-        path.startsWith(".\\") || path.startsWith("..\\")
-}
+internal fun isCwdRelativePath(path: String): Boolean =
+    path == "." ||
+        path.startsWith("./") ||
+        path == ".." ||
+        path.startsWith("../") ||
+        path.startsWith(".\\") ||
+        path.startsWith("..\\")

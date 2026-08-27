@@ -46,11 +46,13 @@ class PtyTest {
 
     @Test
     fun testCommandBuilderBasics() {
-        val cmd = CommandBuilder.new("ls")
-            .arg("-la")
-            .arg("/tmp")
-            .env("FOO", "BAR")
-            .cwd("/var")
+        val cmd =
+            CommandBuilder
+                .new("ls")
+                .arg("-la")
+                .arg("/tmp")
+                .env("FOO", "BAR")
+                .cwd("/var")
 
         assertEquals(listOf("ls", "-la", "/tmp"), cmd.getArgv())
         assertEquals("BAR", cmd.getEnv("FOO"))
@@ -61,9 +63,11 @@ class PtyTest {
 
     @Test
     fun testCommandBuilderQuoting() {
-        val cmd = CommandBuilder.new("echo")
-            .arg("hello world")
-            .arg("quote\"test")
+        val cmd =
+            CommandBuilder
+                .new("echo")
+                .arg("hello world")
+                .arg("quote\"test")
 
         assertEquals("echo \"hello world\" \"quote\\\"test\"", cmd.asUnixCommandLine())
     }

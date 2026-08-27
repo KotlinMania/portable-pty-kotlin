@@ -30,15 +30,14 @@ data class ExitStatus(
 
     fun exitCode(): Int = code
 
-    override fun toString(): String {
-        return if (success()) {
+    override fun toString(): String =
+        if (success()) {
             "Success"
         } else if (signal != null) {
             "Terminated by $signal"
         } else {
             "Exited with code $code"
         }
-    }
 
     companion object {
         fun withExitCode(code: Int): ExitStatus = ExitStatus(code = code, signal = null)
@@ -52,6 +51,7 @@ data class ExitStatus(
  */
 interface ChildKiller {
     fun kill()
+
     fun cloneKiller(): ChildKiller
 }
 
@@ -60,8 +60,11 @@ interface ChildKiller {
  */
 interface Child : ChildKiller {
     fun tryWait(): ExitStatus?
+
     fun wait(): ExitStatus
+
     fun processId(): Long?
+
     fun asRawHandle(): Long? = null
 }
 
@@ -84,9 +87,13 @@ class ProcessSignaller(
  */
 interface MasterPty {
     fun resize(size: PtySize)
+
     fun getSize(): PtySize
+
     fun processGroupLeader(): Long? = null
+
     fun asRawFd(): Int? = null
+
     fun ttyName(): String? = null
 }
 
@@ -117,30 +124,39 @@ interface PtySystem {
  */
 class DefaultPtySystem : PtySystem {
     override fun openpty(size: PtySize): PtyPair {
-        val master = object : MasterPty {
-            private var currentSize = size
-            override fun resize(size: PtySize) {
-                currentSize = size
+        val master =
+            object : MasterPty {
+                private var currentSize = size
+
+                override fun resize(size: PtySize) {
+                    currentSize = size
+                }
+
+                override fun getSize(): PtySize = currentSize
             }
-            override fun getSize(): PtySize = currentSize
-        }
-        val slave = object : SlavePty {
-            override fun spawnCommand(cmd: CommandBuilder): Child {
-                return object : Child {
-                    private var exited = false
-                    override fun tryWait(): ExitStatus? = if (exited) ExitStatus.withExitCode(0) else null
-                    override fun wait(): ExitStatus {
-                        exited = true
-                        return ExitStatus.withExitCode(0)
+        val slave =
+            object : SlavePty {
+                override fun spawnCommand(cmd: CommandBuilder): Child {
+                    return object : Child {
+                        private var exited = false
+
+                        override fun tryWait(): ExitStatus? = if (exited) ExitStatus.withExitCode(0) else null
+
+                        override fun wait(): ExitStatus {
+                            exited = true
+                            return ExitStatus.withExitCode(0)
+                        }
+
+                        override fun processId(): Long? = 1000L
+
+                        override fun kill() {
+                            exited = true
+                        }
+
+                        override fun cloneKiller(): ChildKiller = ProcessSignaller(pid = 1000L)
                     }
-                    override fun processId(): Long? = 1000L
-                    override fun kill() {
-                        exited = true
-                    }
-                    override fun cloneKiller(): ChildKiller = ProcessSignaller(pid = 1000L)
                 }
             }
-        }
         return PtyPair(slave = slave, master = master)
     }
 }
