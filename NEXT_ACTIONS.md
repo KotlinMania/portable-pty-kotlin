@@ -4,13 +4,13 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 3/12 (25.0%)
-- **Function parity:** 58/133 matched (target 89) — 43.6%
+- **Files Present:** 3/8 (37.5%)
+- **Function parity:** 58/128 matched (target 89) — 45.3%
 - **Class/type parity:** 14/38 matched (target 21) — 36.8%
-- **Combined symbol parity:** 72/171 matched (target 110) — 42.1%
-- **Average inline-code cosine:** 0.46 (function body across 2 matched files)
-- **Average documentation cosine:** 0.36 (doc text across 2 matched files)
-- **Cheat-zeroed Files:** 1
+- **Combined symbol parity:** 72/166 matched (target 110) — 43.4%
+- **Average inline-code cosine:** 0.41 (function body across 3 matched files)
+- **Average documentation cosine:** 0.47 (doc text across 3 matched files)
+- **Cheat-zeroed Files:** 0
 - **Critical Issues:** 3 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
@@ -27,7 +27,7 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. portable-pty.serial
+### 1. serial
 
 - **Target:** `portablepty.Serial`
 - **Similarity:** 0.37
@@ -39,19 +39,19 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** `Handle`, `Slave`, `Master`, `MasterWriter`, `Reader`
 - **Lint issues:** 1
 
-### 2. portable-pty.lib
+### 2. lib
 
-- **Target:** `portablepty.Pty [STUB]`
-- **Similarity:** 0.00
+- **Target:** `portablepty.Pty`
+- **Similarity:** 0.30
 - **Dependents:** 0
-- **Priority Score:** 72710.0
+- **Priority Score:** 72707.0
 - **Functions:** 11/16 matched (target 30)
 - **Missing functions:** `default`, `get_termios`, `signal`, `from`, `fmt`
 - **Types:** 9/11 matched
 - **Missing types:** `RawDup`, `NativePtySystem`
 - **Lint issues:** 1
 
-### 3. portable-pty.cmdbuilder
+### 3. cmdbuilder
 
 - **Target:** `portablepty.CommandBuilder`
 - **Similarity:** 0.55
