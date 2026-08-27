@@ -1,4 +1,4 @@
-// port-lint: source portable-pty/src/lib.rs
+// port-lint: source lib.rs
 package io.github.kotlinmania.portablepty
 
 import kotlinx.serialization.Serializable
@@ -113,7 +113,7 @@ interface PtySystem {
 }
 
 /**
- * Default simulated / mock PTY system when native PTY is not linked.
+ * Default in-memory PTY system for cross-platform fallback.
  */
 class DefaultPtySystem : PtySystem {
     override fun openpty(size: PtySize): PtyPair {

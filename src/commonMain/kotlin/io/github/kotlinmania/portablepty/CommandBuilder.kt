@@ -1,4 +1,4 @@
-// port-lint: source portable-pty/src/cmdbuilder.rs
+// port-lint: source cmdbuilder.rs
 package io.github.kotlinmania.portablepty
 
 import kotlinx.serialization.Serializable
