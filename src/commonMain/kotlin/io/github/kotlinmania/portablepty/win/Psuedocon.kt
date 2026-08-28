@@ -36,9 +36,7 @@ class PsuedoCon(
         // Resizes the pseudoconsole buffer
     }
 
-    fun spawnCommand(cmd: CommandBuilder): WinChild {
-        return WinChild()
-    }
+    fun spawnCommand(cmd: CommandBuilder): WinChild = WinChild()
 
     fun drop() {
         close()
@@ -49,8 +47,6 @@ class PsuedoCon(
     }
 
     companion object {
-        fun new(size: Coord, input: Long = 0L, output: Long = 0L): PsuedoCon {
-            return PsuedoCon(con = 1L)
-        }
+        fun new(size: Coord, input: Long = 0L, output: Long = 0L): PsuedoCon = PsuedoCon(con = 1L)
     }
 }

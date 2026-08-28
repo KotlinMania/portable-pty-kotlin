@@ -242,13 +242,12 @@ class CommandBuilder private constructor(
     /**
      * Convert this builder to an executable command argv representation.
      */
-    fun asCommand(): List<String> {
-        return if (isDefaultProg()) {
+    fun asCommand(): List<String> =
+        if (isDefaultProg()) {
             listOf(getShell())
         } else {
             args.toList()
         }
-    }
 
     /**
      * Converts current directory to wide character format.
