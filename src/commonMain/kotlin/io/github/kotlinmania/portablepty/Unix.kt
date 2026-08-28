@@ -46,7 +46,8 @@ internal fun openptyInternal(size: PtySize): Pair<UnixMasterPty, UnixSlavePty> {
 class PtyFd(
     private var rawFd: RawFd = 0,
     private var size: PtySize = PtySize.DEFAULT,
-) : Read, Write {
+) : Read,
+    Write {
     fun deref(): PtyFd = this
 
     fun derefMut(): PtyFd = this

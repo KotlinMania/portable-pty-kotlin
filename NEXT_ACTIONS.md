@@ -5,10 +5,10 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 8/8 (100.0%)
-- **Function parity:** 120/120 matched (target 192) — 100.0%
+- **Function parity:** 119/120 matched (target 191) — 99.2%
 - **Class/type parity:** 38/38 matched (target 52) — 100.0%
-- **Combined symbol parity:** 158/158 matched (target 244) — 100.0%
-- **Average inline-code cosine:** 0.46 (function body across 7 matched files)
+- **Combined symbol parity:** 157/158 matched (target 243) — 99.4%
+- **Average inline-code cosine:** 0.45 (function body across 7 matched files)
 - **Average documentation cosine:** 0.37 (doc text across 7 matched files)
 - **Cheat-zeroed Files:** 1
 - **Critical Issues:** 7 files with <0.60 function similarity
@@ -39,7 +39,19 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** _none_
 - **Lint issues:** 2
 
-### 2. cmdbuilder
+### 2. lib
+
+- **Target:** `portablepty.Pty`
+- **Similarity:** 0.35
+- **Dependents:** 0
+- **Priority Score:** 12706.5
+- **Functions:** 15/16 matched (target 45)
+- **Missing functions:** `signal`
+- **Types:** 11/11 matched (target 16)
+- **Missing types:** _none_
+- **Lint issues:** 1
+
+### 3. cmdbuilder
 
 - **Target:** `portablepty.CommandBuilder`
 - **Similarity:** 0.61
@@ -51,7 +63,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** _none_
 - **Tests:** 3/3 matched
 
-### 3. serial
+### 4. serial
 
 - **Target:** `portablepty.Serial`
 - **Similarity:** 0.53
@@ -62,18 +74,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 8/8 matched (target 12)
 - **Missing types:** _none_
 - **Lint issues:** 2
-
-### 4. lib
-
-- **Target:** `portablepty.Pty`
-- **Similarity:** 0.38
-- **Dependents:** 0
-- **Priority Score:** 2706.2
-- **Functions:** 16/16 matched (target 46)
-- **Missing functions:** _none_
-- **Types:** 11/11 matched (target 16)
-- **Missing types:** _none_
-- **Lint issues:** 1
 
 ### 5. unix
 

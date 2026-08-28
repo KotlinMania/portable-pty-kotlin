@@ -59,6 +59,7 @@ class ConPtyMasterPty(
     override fun takeWriter(): Write =
         object : Write {
             override fun write(buf: ByteArray, offset: Int, length: Int): Int = length
+
             override fun flush() {}
         }
 }

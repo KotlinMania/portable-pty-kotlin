@@ -24,8 +24,6 @@ class ProcThreadAttributeList private constructor(
     }
 
     companion object {
-        fun withCapacity(numAttributes: Long): ProcThreadAttributeList {
-            return ProcThreadAttributeList(ByteArray(numAttributes.toInt() * 16))
-        }
+        fun withCapacity(numAttributes: Long): ProcThreadAttributeList = ProcThreadAttributeList(ByteArray(numAttributes.toInt() * 16))
     }
 }

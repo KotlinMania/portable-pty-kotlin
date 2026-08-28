@@ -32,8 +32,11 @@ data class Termios(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Termios) return false
-        return iflag == other.iflag && oflag == other.oflag && cflag == other.cflag &&
-            lflag == other.lflag && cc.contentEquals(other.cc)
+        return iflag == other.iflag &&
+            oflag == other.oflag &&
+            cflag == other.cflag &&
+            lflag == other.lflag &&
+            cc.contentEquals(other.cc)
     }
 
     override fun hashCode(): Int {
@@ -281,6 +284,7 @@ class DefaultPtySystem : PtySystem {
                 override fun takeWriter(): Write =
                     object : Write {
                         override fun write(buf: ByteArray, offset: Int, length: Int): Int = length
+
                         override fun flush() {}
                     }
             }

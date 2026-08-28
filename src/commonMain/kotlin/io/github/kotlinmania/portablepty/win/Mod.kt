@@ -55,9 +55,7 @@ class WinChild(
         return null
     }
 
-    override fun tryWait(): ExitStatus? {
-        return isComplete()
-    }
+    override fun tryWait(): ExitStatus? = isComplete()
 
     override fun wait(): ExitStatus {
         val complete = tryWait()
@@ -81,17 +79,13 @@ class WinChild(
         }
     }
 
-    override fun asRawHandle(): Long? {
-        return proc
-    }
+    override fun asRawHandle(): Long? = proc
 
     override fun kill() {
         doKill()
     }
 
-    override fun cloneKiller(): ChildKiller {
-        return WinChildKiller(proc = proc)
-    }
+    override fun cloneKiller(): ChildKiller = WinChildKiller(proc = proc)
 }
 
 class WinChildKiller(
@@ -106,7 +100,5 @@ class WinChildKiller(
         }
     }
 
-    override fun cloneKiller(): ChildKiller {
-        return WinChildKiller(proc = proc)
-    }
+    override fun cloneKiller(): ChildKiller = WinChildKiller(proc = proc)
 }
