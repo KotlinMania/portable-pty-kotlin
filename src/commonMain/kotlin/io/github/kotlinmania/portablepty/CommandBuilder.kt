@@ -25,7 +25,7 @@ fun regValueToString(value: String): String = value
 /**
  * Retrieves the base environment for process spawning.
  */
-fun getBaseEnv(): MutableMap<String, EnvEntry> {
+fun getBaseEnv(): Map<String, EnvEntry> {
     val env = mutableMapOf<String, EnvEntry>()
     val shellKey = EnvEntry.mapKey("SHELL")
     env[shellKey] =
@@ -51,7 +51,7 @@ class CommandBuilder private constructor(
 ) {
     constructor(program: String) : this(
         args = mutableListOf(program),
-        envs = getBaseEnv(),
+        envs = getBaseEnv().toMutableMap(),
         cwd = null,
         umaskValue = null,
         controllingTty = true,
@@ -314,7 +314,7 @@ class CommandBuilder private constructor(
         fun fromArgv(args: List<String>): CommandBuilder =
             CommandBuilder(
                 args = args.toMutableList(),
-                envs = getBaseEnv(),
+                envs = getBaseEnv().toMutableMap(),
                 cwd = null,
                 umaskValue = null,
                 controllingTty = true,
@@ -326,7 +326,7 @@ class CommandBuilder private constructor(
         fun newDefaultProg(): CommandBuilder =
             CommandBuilder(
                 args = mutableListOf(),
-                envs = getBaseEnv(),
+                envs = getBaseEnv().toMutableMap(),
                 cwd = null,
                 umaskValue = null,
                 controllingTty = true,
@@ -335,7 +335,7 @@ class CommandBuilder private constructor(
         /**
          * Appends an argument to the command line buffer with Windows quoting rules.
          */
-        fun appendQuoted(arg: String, cmdline: MutableList<UShort>) {
+        internal fun appendQuoted(arg: String, cmdline: MutableList<UShort>) {
             if (arg.isNotEmpty() && !arg.any { it == ' ' || it == '\t' || it == '\n' || it == '"' || it == '\\' }) {
                 for (ch in arg) {
                     cmdline.add(ch.code.toUShort())
