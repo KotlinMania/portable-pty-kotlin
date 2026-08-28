@@ -45,6 +45,14 @@ enum class FlowControl {
 }
 
 /**
+ * Internal handle type for serial port operations.
+ */
+class Handle(
+    val portName: String,
+    val baud: Int,
+)
+
+/**
  * Implements a serial port based TTY system.
  */
 class SerialTty(
@@ -55,6 +63,10 @@ class SerialTty(
     private var parity: Parity = Parity.None
     private var stopBits: StopBits = StopBits.One
     private var flowControl: FlowControl = FlowControl.XonXoff
+
+    companion object {
+        fun new(port: String): SerialTty = SerialTty(port)
+    }
 
     fun setBaudRate(baud: Int) {
         this.baud = baud
@@ -89,34 +101,42 @@ class SerialTty(
     fun getFlowControl(): FlowControl = flowControl
 
     override fun openpty(size: PtySize): PtyPair {
-        val master =
-            object : MasterPty {
-                override fun resize(size: PtySize) {}
-
-                override fun getSize(): PtySize = PtySize.DEFAULT
-            }
-        val slave =
-            object : SlavePty {
-                override fun spawnCommand(cmd: CommandBuilder): Child {
-                    if (!cmd.isDefaultProg()) {
-                        throw IllegalArgumentException("can only use default prog commands with serial tty implementations")
-                    }
-                    return SerialChild()
-                }
-            }
+        val handle = Handle(portName = port, baud = baud)
+        val master = Master(port = handle)
+        val slave = Slave(port = handle)
         return PtyPair(slave = slave, master = master)
+    }
+}
+
+/**
+ * Slave side of a serial PTY.
+ */
+class Slave(
+    val port: Handle,
+) : SlavePty {
+    override fun spawnCommand(cmd: CommandBuilder): Child {
+        if (!cmd.isDefaultProg()) {
+            throw IllegalArgumentException("can only use default prog commands with serial tty implementations")
+        }
+        return SerialChild(port = port)
     }
 }
 
 /**
  * Child process handle on a serial connection.
  */
-class SerialChild : Child {
+class SerialChild(
+    val port: Handle? = null,
+) : Child {
+    fun fmt(): String = "SerialChild"
+
     override fun tryWait(): ExitStatus? = null
 
     override fun wait(): ExitStatus = ExitStatus.withExitCode(0)
 
     override fun processId(): Long? = null
+
+    override fun asRawHandle(): Long? = null
 
     override fun kill() {}
 
@@ -130,4 +150,55 @@ class SerialChildKiller : ChildKiller {
     override fun kill() {}
 
     override fun cloneKiller(): ChildKiller = SerialChildKiller()
+}
+
+/**
+ * Master side of a serial PTY.
+ */
+class Master(
+    val port: Handle,
+) : MasterPty {
+    private var tookWriter: Boolean = false
+
+    override fun resize(size: PtySize) {}
+
+    override fun getSize(): PtySize = PtySize.DEFAULT
+
+    override fun tryCloneReader(): Read = Reader(port = port)
+
+    override fun takeWriter(): Write {
+        if (tookWriter) {
+            throw IllegalStateException("cannot take writer more than once")
+        }
+        tookWriter = true
+        return MasterWriter(port = port)
+    }
+
+    override fun processGroupLeader(): Long? = null
+
+    override fun asRawFd(): Int? = null
+
+    override fun ttyName(): String? = null
+
+    override fun getTermios(): Termios? = null
+}
+
+/**
+ * Stream writer for sending data to the master serial end.
+ */
+class MasterWriter(
+    val port: Handle,
+) : Write {
+    override fun write(buf: ByteArray, offset: Int, length: Int): Int = length
+
+    override fun flush() {}
+}
+
+/**
+ * Stream reader for receiving data from the master serial end.
+ */
+class Reader(
+    val port: Handle,
+) : Read {
+    override fun read(buf: ByteArray, offset: Int, length: Int): Int = 0
 }

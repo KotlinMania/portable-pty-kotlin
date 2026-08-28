@@ -4,14 +4,14 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 3/8 (37.5%)
-- **Function parity:** 58/128 matched (target 89) — 45.3%
-- **Class/type parity:** 14/38 matched (target 21) — 36.8%
-- **Combined symbol parity:** 72/166 matched (target 110) — 43.4%
-- **Average inline-code cosine:** 0.41 (function body across 3 matched files)
-- **Average documentation cosine:** 0.47 (doc text across 3 matched files)
-- **Cheat-zeroed Files:** 0
-- **Critical Issues:** 3 files with <0.60 function similarity
+- **Files Present:** 8/8 (100.0%)
+- **Function parity:** 120/120 matched (target 192) — 100.0%
+- **Class/type parity:** 38/38 matched (target 52) — 100.0%
+- **Combined symbol parity:** 158/158 matched (target 244) — 100.0%
+- **Average inline-code cosine:** 0.46 (function body across 7 matched files)
+- **Average documentation cosine:** 0.37 (doc text across 7 matched files)
+- **Cheat-zeroed Files:** 1
+- **Critical Issues:** 7 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -27,41 +27,99 @@ No missing high-value files detected.
 
 Every matched file is listed below with function and type symbol parity.
 
-### 1. serial
+### 1. win.psuedocon
 
-- **Target:** `portablepty.Serial`
-- **Similarity:** 0.37
-- **Dependents:** 0
-- **Priority Score:** 163306.3
-- **Functions:** 14/25 matched (target 22)
-- **Missing functions:** `new`, `fmt`, `as_raw_handle`, `write`, `flush`, `try_clone_reader`, `take_writer`, `process_group_leader`, `as_raw_fd`, `tty_name`, `read`
-- **Types:** 3/8 matched (target 7)
-- **Missing types:** `Handle`, `Slave`, `Master`, `MasterWriter`, `Reader`
-- **Lint issues:** 1
-
-### 2. lib
-
-- **Target:** `portablepty.Pty`
+- **Target:** `win.Psuedocon`
 - **Similarity:** 0.30
-- **Dependents:** 0
-- **Priority Score:** 72707.0
-- **Functions:** 11/16 matched (target 30)
-- **Missing functions:** `default`, `get_termios`, `signal`, `from`, `fmt`
-- **Types:** 9/11 matched
-- **Missing types:** `RawDup`, `NativePtySystem`
-- **Lint issues:** 1
+- **Dependents:** 1
+- **Priority Score:** 1000707.0
+- **Functions:** 5/5 matched (target 6)
+- **Missing functions:** _none_
+- **Types:** 2/2 matched (target 3)
+- **Missing types:** _none_
+- **Lint issues:** 2
 
-### 3. cmdbuilder
+### 2. cmdbuilder
 
 - **Target:** `portablepty.CommandBuilder`
-- **Similarity:** 0.55
+- **Similarity:** 0.61
 - **Dependents:** 0
-- **Priority Score:** 43904.5
-- **Functions:** 33/37 matched
-- **Missing functions:** `get_base_env`, `reg_value_to_string`, `resolve_path`, `as_command`
+- **Priority Score:** 3903.9
+- **Functions:** 37/37 matched (target 41)
+- **Missing functions:** _none_
 - **Types:** 2/2 matched (target 3)
 - **Missing types:** _none_
 - **Tests:** 3/3 matched
+
+### 3. serial
+
+- **Target:** `portablepty.Serial`
+- **Similarity:** 0.53
+- **Dependents:** 0
+- **Priority Score:** 3304.7
+- **Functions:** 25/25 matched (target 34)
+- **Missing functions:** _none_
+- **Types:** 8/8 matched (target 12)
+- **Missing types:** _none_
+- **Lint issues:** 2
+
+### 4. lib
+
+- **Target:** `portablepty.Pty`
+- **Similarity:** 0.38
+- **Dependents:** 0
+- **Priority Score:** 2706.2
+- **Functions:** 16/16 matched (target 46)
+- **Missing functions:** _none_
+- **Types:** 11/11 matched (target 16)
+- **Missing types:** _none_
+- **Lint issues:** 1
+
+### 5. unix
+
+- **Target:** `portablepty.Unix`
+- **Similarity:** 0.51
+- **Dependents:** 0
+- **Priority Score:** 2404.9
+- **Functions:** 18/18 matched (target 36)
+- **Missing functions:** _none_
+- **Types:** 6/6 matched (target 8)
+- **Missing types:** _none_
+- **Lint issues:** 2
+
+### 6. win.mod
+
+- **Target:** `win.Mod [STUB]`
+- **Similarity:** 0.00
+- **Dependents:** 0
+- **Priority Score:** 1310.0
+- **Functions:** 9/9 matched (target 14)
+- **Missing functions:** _none_
+- **Types:** 4/4 matched (target 5)
+- **Missing types:** _none_
+
+### 7. win.conpty
+
+- **Target:** `win.Conpty`
+- **Similarity:** 0.54
+- **Dependents:** 0
+- **Priority Score:** 1004.6
+- **Functions:** 6/6 matched (target 10)
+- **Missing functions:** _none_
+- **Types:** 4/4 matched
+- **Missing types:** _none_
+
+### 8. win.procthreadattr
+
+- **Target:** `win.Procthreadattr`
+- **Similarity:** 0.32
+- **Dependents:** 0
+- **Priority Score:** 506.8
+- **Functions:** 4/4 matched (target 5)
+- **Missing functions:** _none_
+- **Types:** 1/1 matched
+- **Missing types:** _none_
+- **Lint issues:** 1
 
 ## Success Criteria
 
