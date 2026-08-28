@@ -3,8 +3,11 @@ package io.github.kotlinmania.portablepty
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Used to deal with Windows having case-insensitive environment variables.
+ */
 @Serializable
-internal data class EnvEntry(
+data class EnvEntry(
     val isFromBaseEnv: Boolean,
     val preferredKey: String,
     val value: String,
@@ -15,7 +18,28 @@ internal data class EnvEntry(
 }
 
 /**
+ * Converts a registry value to a string representation.
+ */
+fun regValueToString(value: String): String = value
+
+/**
+ * Retrieves the base environment for process spawning.
+ */
+fun getBaseEnv(): MutableMap<String, EnvEntry> {
+    val env = mutableMapOf<String, EnvEntry>()
+    val shellKey = EnvEntry.mapKey("SHELL")
+    env[shellKey] =
+        EnvEntry(
+            isFromBaseEnv = true,
+            preferredKey = "SHELL",
+            value = "/bin/sh",
+        )
+    return env
+}
+
+/**
  * Prepares a command to be spawned into a pty.
+ * The interface is intentionally similar to standard process commands.
  */
 @Serializable
 class CommandBuilder private constructor(
@@ -27,14 +51,20 @@ class CommandBuilder private constructor(
 ) {
     constructor(program: String) : this(
         args = mutableListOf(program),
-        envs = mutableMapOf(),
+        envs = getBaseEnv(),
         cwd = null,
         umaskValue = null,
         controllingTty = true,
     )
 
+    /**
+     * Returns true if this builder was created via [newDefaultProg].
+     */
     fun isDefaultProg(): Boolean = args.isEmpty()
 
+    /**
+     * Append an argument to the current command line.
+     */
     fun arg(arg: String): CommandBuilder {
         if (isDefaultProg()) {
             throw IllegalStateException("attempted to add args to a default_prog builder")
@@ -43,6 +73,9 @@ class CommandBuilder private constructor(
         return this
     }
 
+    /**
+     * Append a sequence of arguments to the current command line.
+     */
     fun args(args: Iterable<String>): CommandBuilder {
         for (a in args) {
             arg(a)
@@ -50,23 +83,41 @@ class CommandBuilder private constructor(
         return this
     }
 
+    /**
+     * Return the configured argument vector.
+     */
     fun getArgv(): List<String> = args.toList()
 
     internal fun getArgvMut(): MutableList<String> = args
 
+    /**
+     * Set whether to set the pty as the controlling terminal.
+     */
     fun setControllingTty(controllingTty: Boolean) {
         this.controllingTty = controllingTty
     }
 
+    /**
+     * Returns whether the pty is set as the controlling terminal.
+     */
     fun getControllingTty(): Boolean = controllingTty
 
+    /**
+     * Configure the process umask.
+     */
     fun umask(mask: Int?): CommandBuilder {
         this.umaskValue = mask
         return this
     }
 
+    /**
+     * Returns the configured umask.
+     */
     fun getUmask(): Int? = umaskValue
 
+    /**
+     * Override the value of an environment variable.
+     */
     fun env(key: String, value: String): CommandBuilder {
         envs[EnvEntry.mapKey(key)] =
             EnvEntry(
@@ -77,30 +128,51 @@ class CommandBuilder private constructor(
         return this
     }
 
+    /**
+     * Remove an environment variable override.
+     */
     fun envRemove(key: String): CommandBuilder {
         envs.remove(EnvEntry.mapKey(key))
         return this
     }
 
+    /**
+     * Clear all environment variables.
+     */
     fun envClear(): CommandBuilder {
         envs.clear()
         return this
     }
 
+    /**
+     * Retrieve an environment variable by key.
+     */
     fun getEnv(key: String): String? = envs[EnvEntry.mapKey(key)]?.value
 
+    /**
+     * Set the current working directory.
+     */
     fun cwd(dir: String): CommandBuilder {
         cwd = dir
         return this
     }
 
+    /**
+     * Clear the working directory.
+     */
     fun clearCwd(): CommandBuilder {
         cwd = null
         return this
     }
 
+    /**
+     * Retrieve the configured working directory.
+     */
     fun getCwd(): String? = cwd
 
+    /**
+     * Iterate over extra environment variables set by caller.
+     */
     fun iterExtraEnv(): List<Pair<String, String>> = iterExtraEnvAsStr()
 
     fun iterExtraEnvAsStr(): List<Pair<String, String>> =
@@ -108,17 +180,16 @@ class CommandBuilder private constructor(
             .filter { !it.isFromBaseEnv }
             .map { it.preferredKey to it.value }
 
+    /**
+     * Iterate over full environment variables including base environment.
+     */
     fun iterFullEnv(): List<Pair<String, String>> = iterFullEnvAsStr()
 
     fun iterFullEnvAsStr(): List<Pair<String, String>> = envs.values.map { it.preferredKey to it.value }
 
-    fun getShell(): String {
-        val shell = getEnv("SHELL") ?: getEnv("ComSpec")
-        return shell ?: "/bin/sh"
-    }
-
-    fun getHomeDir(): String = getEnv("HOME") ?: getEnv("USERPROFILE") ?: "/"
-
+    /**
+     * Return the configured command and arguments as a single unix shell string.
+     */
     fun asUnixCommandLine(): String {
         val quoted =
             args.map { arg ->
@@ -131,11 +202,32 @@ class CommandBuilder private constructor(
         return quoted.joinToString(" ")
     }
 
+    /**
+     * Determine which shell to run.
+     */
+    fun getShell(): String {
+        val shell = getEnv("SHELL") ?: getEnv("ComSpec")
+        return shell ?: "/bin/sh"
+    }
+
+    /**
+     * Determine the user's home directory.
+     */
+    fun getHomeDir(): String = getEnv("HOME") ?: getEnv("USERPROFILE") ?: "/"
+
+    /**
+     * Resolves the PATH environment variable.
+     */
+    fun resolvePath(): String? = getEnv("PATH")
+
+    /**
+     * Search the system PATH for the given executable name.
+     */
     fun searchPath(exe: String, cwd: String = "."): String {
         if (isCwdRelativePath(exe)) {
             return if (cwd == ".") exe else "$cwd/$exe"
         }
-        val pathVar = getEnv("PATH")
+        val pathVar = resolvePath()
         if (pathVar != null) {
             val paths = pathVar.split(':', ';')
             for (p in paths) {
@@ -147,11 +239,28 @@ class CommandBuilder private constructor(
         return exe
     }
 
+    /**
+     * Convert this builder to an executable command argv representation.
+     */
+    fun asCommand(): List<String> {
+        return if (isDefaultProg()) {
+            listOf(getShell())
+        } else {
+            args.toList()
+        }
+    }
+
+    /**
+     * Converts current directory to wide character format.
+     */
     fun currentDirectory(): List<UShort>? {
         val dir = cwd ?: getEnv("USERPROFILE") ?: getEnv("HOME") ?: return null
         return dir.map { it.code.toUShort() } + listOf(0u.toUShort())
     }
 
+    /**
+     * Constructs a Windows-style environment block.
+     */
     fun environmentBlock(): List<UShort> {
         val block = mutableListOf<UShort>()
         for (entry in envs.values) {
@@ -168,6 +277,9 @@ class CommandBuilder private constructor(
         return block
     }
 
+    /**
+     * Constructs a Windows command line with proper quoting.
+     */
     fun cmdline(): Pair<List<UShort>, List<UShort>> {
         val exe =
             if (isDefaultProg()) {
@@ -191,26 +303,38 @@ class CommandBuilder private constructor(
     }
 
     companion object {
+        /**
+         * Create a new builder instance with argv[0] set to the specified program.
+         */
         fun new(program: String): CommandBuilder = CommandBuilder(program)
 
+        /**
+         * Create a new builder instance from a pre-built argument vector.
+         */
         fun fromArgv(args: List<String>): CommandBuilder =
             CommandBuilder(
                 args = args.toMutableList(),
-                envs = mutableMapOf(),
+                envs = getBaseEnv(),
                 cwd = null,
                 umaskValue = null,
                 controllingTty = true,
             )
 
+        /**
+         * Create a new builder instance that runs a default program (such as the default shell).
+         */
         fun newDefaultProg(): CommandBuilder =
             CommandBuilder(
                 args = mutableListOf(),
-                envs = mutableMapOf(),
+                envs = getBaseEnv(),
                 cwd = null,
                 umaskValue = null,
                 controllingTty = true,
             )
 
+        /**
+         * Appends an argument to the command line buffer with Windows quoting rules.
+         */
         fun appendQuoted(arg: String, cmdline: MutableList<UShort>) {
             if (arg.isNotEmpty() && !arg.any { it == ' ' || it == '\t' || it == '\n' || it == '"' || it == '\\' }) {
                 for (ch in arg) {
@@ -252,7 +376,10 @@ class CommandBuilder private constructor(
     }
 }
 
-internal fun isCwdRelativePath(path: String): Boolean =
+/**
+ * Returns true if the path begins with `./` or `../`.
+ */
+fun isCwdRelativePath(path: String): Boolean =
     path == "." ||
         path.startsWith("./") ||
         path == ".." ||
