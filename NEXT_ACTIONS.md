@@ -37,7 +37,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 2/2 matched (target 3)
 - **Missing types:** _none_
-- **Lint issues:** 2
+- **Lint issues:** 1
 
 ### 2. lib
 
@@ -112,9 +112,9 @@ Every matched file is listed below with function and type symbol parity.
 ### 8. win.procthreadattr
 
 - **Target:** `win.Procthreadattr`
-- **Similarity:** 0.32
+- **Similarity:** 0.33
 - **Dependents:** 0
-- **Priority Score:** 506.8
+- **Priority Score:** 506.7
 - **Functions:** 4/4 matched (target 5)
 - **Missing functions:** _none_
 - **Types:** 1/1 matched
