@@ -1,4 +1,4 @@
-// port-lint: source unix.rs
+// port-lint: source portable-pty/src/unix.rs
 package io.github.kotlinmania.portablepty
 
 /**
