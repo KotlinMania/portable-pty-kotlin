@@ -1,4 +1,4 @@
-// port-lint: source win/procthreadattr.rs
+// port-lint: source portable-pty/src/win/procthreadattr.rs
 package io.github.kotlinmania.portablepty.win
 
 const val PROC_THREAD_ATTRIBUTE_PSEUDOCONSOLE: Long = 0x00020016L

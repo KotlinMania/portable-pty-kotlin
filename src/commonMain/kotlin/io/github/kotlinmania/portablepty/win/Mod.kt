@@ -1,4 +1,4 @@
-// port-lint: source win/mod.rs
+// port-lint: source portable-pty/src/win/mod.rs
 package io.github.kotlinmania.portablepty.win
 
 import io.github.kotlinmania.portablepty.Child

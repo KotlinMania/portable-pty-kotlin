@@ -1,4 +1,4 @@
-// port-lint: source win/psuedocon.rs
+// port-lint: source portable-pty/src/win/psuedocon.rs
 package io.github.kotlinmania.portablepty.win
 
 import io.github.kotlinmania.portablepty.CommandBuilder

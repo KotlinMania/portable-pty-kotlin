@@ -1,4 +1,4 @@
-// port-lint: tests cmdbuilder.rs
+// port-lint: tests portable-pty/src/cmdbuilder.rs
 package io.github.kotlinmania.portablepty
 
 import kotlin.test.Test
