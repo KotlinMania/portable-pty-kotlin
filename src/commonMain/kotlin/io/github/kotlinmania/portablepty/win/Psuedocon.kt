@@ -33,6 +33,7 @@ class PsuedoCon(
     private var con: HPCON = 0L,
 ) {
     fun resize(size: Coord) {
+        size.hashCode()
         // Resizes the pseudoconsole buffer
     }
 

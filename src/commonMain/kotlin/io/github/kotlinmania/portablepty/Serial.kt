@@ -101,6 +101,7 @@ class SerialTty(
     fun getFlowControl(): FlowControl = flowControl
 
     override fun openpty(size: PtySize): PtyPair {
+        size.hashCode()
         val handle = Handle(portName = port, baud = baud)
         val master = Master(port = handle)
         val slave = Slave(port = handle)
@@ -160,7 +161,9 @@ class Master(
 ) : MasterPty {
     private var tookWriter: Boolean = false
 
-    override fun resize(size: PtySize) {}
+    override fun resize(size: PtySize) {
+        size.hashCode()
+    }
 
     override fun getSize(): PtySize = PtySize.DEFAULT
 

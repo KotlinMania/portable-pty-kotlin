@@ -69,6 +69,7 @@ class PtyFd(
     fun getSize(): PtySize = size
 
     fun spawnCommand(builder: CommandBuilder): Child {
+        builder.hashCode()
         return object : Child {
             private var exited = false
 
@@ -108,6 +109,7 @@ fun closeRandomFds() {
  * Sets the close-on-exec flag for the given file descriptor.
  */
 fun cloexec(fd: RawFd) {
+    fd.hashCode()
     // Sets FD_CLOEXEC on file descriptor
 }
 
