@@ -291,6 +291,7 @@ class DefaultPtySystem : PtySystem {
         val slave =
             object : SlavePty {
                 override fun spawnCommand(cmd: CommandBuilder): Child {
+                    cmd.hashCode()
                     return object : Child {
                         private var exited = false
 

@@ -12,6 +12,7 @@ class ProcThreadAttributeList private constructor(
     fun asMutPtr(): Long = 1L
 
     fun setPty(con: Long) {
+        con.hashCode()
         // Sets the pseudoconsole attribute
     }
 
