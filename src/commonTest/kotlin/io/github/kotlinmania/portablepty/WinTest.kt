@@ -1,4 +1,4 @@
-// port-lint: tests portable-pty/src/win/mod.rs
+// port-lint: tests win/mod.rs
 package io.github.kotlinmania.portablepty
 
 import io.github.kotlinmania.portablepty.win.ConPtySystem

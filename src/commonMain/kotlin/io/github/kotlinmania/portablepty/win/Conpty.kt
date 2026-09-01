@@ -1,4 +1,4 @@
-// port-lint: source portable-pty/src/win/conpty.rs
+// port-lint: source win/conpty.rs
 package io.github.kotlinmania.portablepty.win
 
 import io.github.kotlinmania.portablepty.Child

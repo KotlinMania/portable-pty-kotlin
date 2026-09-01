@@ -2,7 +2,7 @@
   "type": "port",
   "name": "portable-pty-kotlin",
   "source": {
-    "path": "tmp",
+    "path": "tmp/portable-pty/src",
     "lang": "rust"
   },
   "target": {
