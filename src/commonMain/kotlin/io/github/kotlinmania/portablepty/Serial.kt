@@ -1,4 +1,4 @@
-// port-lint: source portable-pty/src/serial.rs
+// port-lint: source serial.rs
 package io.github.kotlinmania.portablepty
 
 import kotlinx.serialization.Serializable
