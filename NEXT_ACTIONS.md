@@ -4,13 +4,13 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Files Present:** 8/8 (100.0%)
-- **Function parity:** 119/120 matched (target 191) — 99.2%
-- **Class/type parity:** 38/38 matched (target 52) — 100.0%
-- **Combined symbol parity:** 157/158 matched (target 243) — 99.4%
+- **Files Present:** 8/12 (66.7%)
+- **Function parity:** 104/109 matched (target 146) — 95.4%
+- **Class/type parity:** 27/27 matched (target 36) — 100.0%
+- **Combined symbol parity:** 131/136 matched (target 182) — 96.3%
 - **Average inline-code cosine:** 0.47 (function body across 6 matched files)
 - **Average documentation cosine:** 0.31 (doc text across 6 matched files)
-- **Cheat-zeroed Files:** 2
+- **Cheat-zeroed Files:** 1
 - **Critical Issues:** 7 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
@@ -29,7 +29,7 @@ Every matched file is listed below with function and type symbol parity.
 
 ### 1. win.psuedocon
 
-- **Target:** `win.Psuedocon [PROVENANCE-FALLBACK]`
+- **Target:** `win.Psuedocon`
 - **Similarity:** 0.31
 - **Dependents:** 1
 - **Priority Score:** 1000706.9
@@ -37,29 +37,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 2/2 matched (target 3)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/win/psuedocon.rs` vs expected `win/psuedocon.rs`
-- **Proposed provenance header:** `// port-lint: source win/psuedocon.rs` (current: `// port-lint: source portable-pty/src/win/psuedocon.rs`)
-- **Lint issues:** 1
 
-### 2. lib
+### 2. portable-pty.cmdbuilder
 
-- **Target:** `portablepty.Pty [STUB] [PROVENANCE-FALLBACK]`
-- **Similarity:** 0.00
-- **Dependents:** 0
-- **Priority Score:** 12710.0
-- **Functions:** 15/16 matched (target 45)
-- **Missing functions:** `signal`
-- **Types:** 11/11 matched (target 16)
-- **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/lib.rs` vs expected `lib.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:portable-pty/src/lib.rs` vs expected `lib.rs`
-- **Proposed provenance header:** `// port-lint: source lib.rs` (current: `// port-lint: source portable-pty/src/lib.rs`)
-- **Proposed provenance header:** `// port-lint: tests lib.rs` (current: `// port-lint: tests portable-pty/src/lib.rs`)
-- **Lint issues:** 2
-
-### 3. cmdbuilder
-
-- **Target:** `portablepty.CommandBuilder [PROVENANCE-FALLBACK]`
+- **Target:** `portablepty.CommandBuilder`
 - **Similarity:** 0.61
 - **Dependents:** 0
 - **Priority Score:** 3903.9
@@ -68,15 +49,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Types:** 2/2 matched (target 3)
 - **Missing types:** _none_
 - **Tests:** 3/3 matched
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/cmdbuilder.rs` vs expected `cmdbuilder.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:portable-pty/src/cmdbuilder.rs` vs expected `cmdbuilder.rs`
-- **Proposed provenance header:** `// port-lint: source cmdbuilder.rs` (current: `// port-lint: source portable-pty/src/cmdbuilder.rs`)
-- **Proposed provenance header:** `// port-lint: tests cmdbuilder.rs` (current: `// port-lint: tests portable-pty/src/cmdbuilder.rs`)
-- **Lint issues:** 2
 
-### 4. serial
+### 3. portable-pty.serial
 
-- **Target:** `portablepty.Serial [PROVENANCE-FALLBACK]`
+- **Target:** `portablepty.Serial`
 - **Similarity:** 0.53
 - **Dependents:** 0
 - **Priority Score:** 3304.7
@@ -84,13 +60,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 8/8 matched (target 12)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/serial.rs` vs expected `serial.rs`
-- **Proposed provenance header:** `// port-lint: source serial.rs` (current: `// port-lint: source portable-pty/src/serial.rs`)
-- **Lint issues:** 1
 
-### 5. unix
+### 4. portable-pty.unix
 
-- **Target:** `portablepty.Unix [PROVENANCE-FALLBACK]`
+- **Target:** `portablepty.Unix`
 - **Similarity:** 0.51
 - **Dependents:** 0
 - **Priority Score:** 2404.9
@@ -98,15 +71,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 6/6 matched (target 8)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/unix.rs` vs expected `unix.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:portable-pty/src/unix.rs` vs expected `unix.rs`
-- **Proposed provenance header:** `// port-lint: source unix.rs` (current: `// port-lint: source portable-pty/src/unix.rs`)
-- **Proposed provenance header:** `// port-lint: tests unix.rs` (current: `// port-lint: tests portable-pty/src/unix.rs`)
-- **Lint issues:** 2
 
-### 6. win.mod
+### 5. win.mod
 
-- **Target:** `win.Mod [STUB] [PROVENANCE-FALLBACK]`
+- **Target:** `win.Mod [STUB]`
 - **Similarity:** 0.00
 - **Dependents:** 0
 - **Priority Score:** 1310.0
@@ -114,15 +82,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 4/4 matched (target 5)
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/win/mod.rs` vs expected `win/mod.rs`
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `tests:portable-pty/src/win/mod.rs` vs expected `win/mod.rs`
-- **Proposed provenance header:** `// port-lint: source win/mod.rs` (current: `// port-lint: source portable-pty/src/win/mod.rs`)
-- **Proposed provenance header:** `// port-lint: tests win/mod.rs` (current: `// port-lint: tests portable-pty/src/win/mod.rs`)
-- **Lint issues:** 2
 
-### 7. win.conpty
+### 6. win.conpty
 
-- **Target:** `win.Conpty [PROVENANCE-FALLBACK]`
+- **Target:** `win.Conpty`
 - **Similarity:** 0.54
 - **Dependents:** 0
 - **Priority Score:** 1004.6
@@ -130,13 +93,10 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 4/4 matched
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/win/conpty.rs` vs expected `win/conpty.rs`
-- **Proposed provenance header:** `// port-lint: source win/conpty.rs` (current: `// port-lint: source portable-pty/src/win/conpty.rs`)
-- **Lint issues:** 1
 
-### 8. win.procthreadattr
+### 7. win.procthreadattr
 
-- **Target:** `win.Procthreadattr [PROVENANCE-FALLBACK]`
+- **Target:** `win.Procthreadattr`
 - **Similarity:** 0.34
 - **Dependents:** 0
 - **Priority Score:** 506.6
@@ -144,9 +104,6 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing functions:** _none_
 - **Types:** 1/1 matched
 - **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `portable-pty/src/win/procthreadattr.rs` vs expected `win/procthreadattr.rs`
-- **Proposed provenance header:** `// port-lint: source win/procthreadattr.rs` (current: `// port-lint: source portable-pty/src/win/procthreadattr.rs`)
-- **Lint issues:** 1
 
 ## Success Criteria
 
@@ -156,4 +113,17 @@ For each file to be considered "complete":
 - All tests ported
 - Documentation ported
 - port-lint header present
+
+## Reexport / Wiring Modules
+
+These files match `reexport_modules` patterns in `.ast_distance_config.json`. They are filtered out of
+normal priority and missing-file ladders because they are wiring
+modules, not direct logic ports. Consult them for call-site routing;
+do not treat them as the next implementation target by default.
+
+### Matched
+
+| Source | Target | Path |
+|--------|--------|------|
+| `portable-pty.lib` | `portablepty.Pty` | `portable-pty/src/lib` |
 
