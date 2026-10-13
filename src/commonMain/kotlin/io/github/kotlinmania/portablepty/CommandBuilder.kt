@@ -353,17 +353,17 @@ class CommandBuilder private constructor(
                 }
 
                 if (i == len) {
-                    for (k in 0 until numBackslashes * 2) {
+                    repeat(numBackslashes * 2) {
                         cmdline.add('\\'.code.toUShort())
                     }
                     break
                 } else if (arg[i] == '"') {
-                    for (k in 0 until numBackslashes * 2 + 1) {
+                    repeat(numBackslashes * 2 + 1) {
                         cmdline.add('\\'.code.toUShort())
                     }
                     cmdline.add(arg[i].code.toUShort())
                 } else {
-                    for (k in 0 until numBackslashes) {
+                    repeat(numBackslashes) {
                         cmdline.add('\\'.code.toUShort())
                     }
                     cmdline.add(arg[i].code.toUShort())

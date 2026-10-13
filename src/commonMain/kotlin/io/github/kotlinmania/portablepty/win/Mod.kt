@@ -18,7 +18,7 @@ class WinChild(
     private var proc: Long = 1000L,
     private var pid: Long? = 1000L,
 ) : Child {
-    private var status: Int = 0
+    private val status: Int = 0
 
     fun isComplete(): ExitStatus? {
         val res = if (proc != 0L) 1 else 0
